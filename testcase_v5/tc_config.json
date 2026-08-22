@@ -1,0 +1,87 @@
+{
+  "_comment": "TEMPLATE — fill in database.write / database.read for YOUR cluster before running. No real credentials ship in this file. See README.md.",
+  "remote": {
+    "remote_dir": "/opt/tc-repro",
+    "logs_dir": "logs",
+    "screen_sessions": {"init": "tc_repro_init", "run": "tc_repro_run"}
+  },
+  "database": {
+    "write": {
+      "host": "127.0.0.1",
+      "port": 3306,
+      "user": "REPLACE_WITH_MASTER_USER",
+      "password": "REPLACE_WITH_MASTER_PASSWORD",
+      "schema": "repro_db",
+      "table": "files",
+      "socket": "/var/run/mysqld/mysqld.sock"
+    },
+    "read": {
+      "host": "REPLACE_WITH_REPLICA_HOST",
+      "port": 3306,
+      "user": "REPLACE_WITH_REPLICA_USER",
+      "password": "REPLACE_WITH_REPLICA_PASSWORD",
+      "schema": "repro_db",
+      "table": "files",
+      "socket": ""
+    }
+  },
+  "init": {
+    "tenants": 50,
+    "rows_per_tenant": 100000,
+    "tenant_id_base": 463855761557,
+    "start_id": 1000000000000,
+    "date_base": 1680000000,
+    "date_step": 60,
+    "seed": 42,
+    "blob_profile": {"small_pct": 30, "medium_pct": 30, "large_pct": 40},
+    "insert_batch_rows": 500,
+    "insert_batch_bytes": 134217728,
+    "init_progress_rows": 100000,
+    "tenant_progress_rows": 10000,
+    "init_workers": 1,
+    "max_parallel_tenants": 50,
+    "relax_durability": true,
+    "force_init": false,
+    "max_replication_lag_seconds": 60,
+    "disable_redo_log": false,
+    "bulk_index_rebuild": false
+  },
+  "run": {
+    "batch_size": 10,
+    "read_source": "replica",
+    "write_target": "master",
+    "encryption": {"mode": "sha256"},
+    "stop_condition": {"mode": "all_rows"},
+    "replication_check": {"mode": "show_replica_status_only"},
+    "max_parallel_tenants": 50,
+    "progress_interval_batches": 100,
+    "tenant_log_interval_batches": 100,
+    "replication_log_interval_seconds": 60,
+    "search_mix": {
+      "enabled": false,
+      "range_estimate_workers": 0,
+      "mrr_workers": 0,
+      "forward_refscan_workers": 0,
+      "rows_per_query": 10,
+      "log_interval_seconds": 60
+    }
+  },
+  "noise": {
+    "enabled": false,
+    "insert_workers": 0,
+    "insert_rate_per_sec": 0,
+    "insert_start_id": 0,
+    "update_workers": 0,
+    "update_rate_per_sec": 0,
+    "update_hot_rows_per_tenant": 0,
+    "pool_max_conns": 0,
+    "log_interval_seconds": 60,
+    "burst": {"enabled": false, "multiplier": 0, "burst_seconds": 0, "interval_seconds": 0}
+  },
+  "safety": {
+    "force_init_requires_flag": true,
+    "max_runtime_seconds": 0
+  },
+  "artifacts": {"dir": "./artifacts"},
+  "debug": {"log_sql_once": false}
+}

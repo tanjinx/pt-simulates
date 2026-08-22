@@ -1,0 +1,134 @@
+# All runtime knobs live here.
+[read]
+host = "localhost"
+port = 3306
+socket = "/mnt/mysql/datadir/mysql.sock"
+user = "harness"
+password = "HarnessTest!"
+workers = 80
+iterations = 0
+duration = 3600
+sleep = 0.0
+log_level = "INFO"
+log_file = ""
+explain = false
+show_source_info = false
+show_trace = false
+
+[master]
+host = "localhost"
+port = 3306
+socket = "/mnt/mysql/datadir/mysql.sock"
+user = "harness"
+password = "HarnessTest!"
+
+[monitor]
+enabled = true
+dest_root = "/data/percona_monitor"
+retention_days = 1
+run_seconds = 3600
+status_interval_seconds = 60
+
+[defaults]
+tenant_ids = [2981626498, 75899570098, 10736132949, 2151557247, 147557470051, 129325844705, 266105194887, 3022319763812, 463855761557, 1446938121600]
+user_id = 900000000001
+source_tag = "HARNESS_SMOKE"
+metadata_prefix = "harness_smoke"
+highlight_type = "harness_smoke"
+payload_mode = "random"
+payload_file = ""
+blob_min_bytes = 512
+blob_max_bytes = 262144
+reuse_fraction = 0.1
+delete_mode = "hard"
+delete_target = "inserted"
+writer_sleep = 0.0
+
+[insert]
+enabled = true
+threads = 40
+batch_size = 1
+sleep = 0.0
+tenant_ids = [2981626498, 75899570098, 10736132949, 2151557247, 147557470051, 129325844705, 266105194887, 3022319763812, 463855761557, 1446938121600]
+blob_min_bytes = 512
+blob_max_bytes = 262144
+
+[update]
+enabled = true
+threads = 30
+batch_size = 1
+sleep = 0.0
+columns = ["contents", "contents_highlight", "metadata", "metadata_enc", "contents_enc", "contents_highlight_enc", "external_ptr", "unencrypted_metadata"]
+blob_min_bytes = 512
+blob_max_bytes = 262144
+reuse_fraction = 0.1
+tenant_ids = [2981626498, 75899570098, 10736132949, 2151557247, 147557470051, 129325844705, 266105194887, 3022319763812, 463855761557, 1446938121600]
+
+[delete]
+enabled = false
+threads = 0
+batch_size = 1
+sleep = 1.0
+mode = "hard"
+tenant_ids = [2981626498, 75899570098, 10736132949, 2151557247, 147557470051, 129325844705, 266105194887, 3022319763812, 463855761557, 1446938121600]
+target = "inserted"
+
+[recycle]
+enabled = true
+threads = 10
+batch_size = 4
+sleep = 0.0
+tenant_ids = [2981626498, 75899570098, 10736132949, 2151557247, 147557470051, 129325844705, 266105194887, 3022319763812, 463855761557, 1446938121600]
+blob_min_bytes = 16384
+blob_max_bytes = 262144
+metadata_bytes = 48000
+tenants_shared_with_bytes = 32000
+payload_mode = "mixed"
+metadata_prefix = "harness_recycle"
+source_tag = "HARNESS_RECYCLE"
+highlight_type = "harness_recycle"
+
+[crash_queries.core16_recent]
+enabled = true
+threads = 5
+sleep = 0.0
+name = "core16_recent"
+sql = """
+select id, tenant_id, user_id, date_create, token, pub_token, size, is_stored, original_name, stored_name, title, mimetype, parent_id, contents, contents_enc, contents_highlight, contents_highlight_enc, highlight_type, metadata, metadata_enc, external_url, is_deleted, date_delete, is_public, pub_shared, last_indexed, source, external_id, service_type_id, service_id, is_multitenant, original_tenant_id, tenants_shared_with, service_tenant_id, is_tombstoned, thumbnail_version, date_thumbnail_retrieved, external_ptr, md5, metadata_version, unencrypted_metadata, restriction_type, version, weight_string(date_create) from files where tenant_id = 8865360933815 and is_stored = 0 and date_create > 1597262065 order by files.date_create asc limit 10
+"""
+
+[crash_queries.core15_seq]
+enabled = true
+threads = 5
+sleep = 0.0
+name = "core15_seq"
+sql = """
+select id, tenant_id, user_id, date_create, token, pub_token, size, is_stored, original_name, stored_name, title, mimetype, parent_id, contents, contents_enc, contents_highlight, contents_highlight_enc, highlight_type, metadata, metadata_enc, external_url, is_deleted, date_delete, is_public, pub_shared, last_indexed, source, external_id, service_type_id, service_id, is_multitenant, original_tenant_id, tenants_shared_with, service_tenant_id, is_tombstoned, thumbnail_version, date_thumbnail_retrieved, external_ptr, md5, metadata_version, unencrypted_metadata, restriction_type, version, weight_string(id) from files where tenant_id = 7594018548 and id > 110863125668 order by files.id asc limit 10
+"""
+
+[crash_queries.core14_recent]
+enabled = true
+threads = 5
+sleep = 0.0
+name = "core14_recent"
+sql = """
+select id, tenant_id, user_id, date_create, token, pub_token, size, is_stored, original_name, stored_name, title, mimetype, parent_id, contents, contents_enc, contents_highlight, contents_highlight_enc, highlight_type, metadata, metadata_enc, external_url, is_deleted, date_delete, is_public, pub_shared, last_indexed, source, external_id, service_type_id, service_id, is_multitenant, original_tenant_id, tenants_shared_with, service_tenant_id, is_tombstoned, thumbnail_version, date_thumbnail_retrieved, external_ptr, md5, metadata_version, unencrypted_metadata, restriction_type, version, weight_string(date_create) from files where tenant_id = 2360670261 and is_stored = 0 and date_create > 1596711908 order by files.date_create asc limit 10
+"""
+
+[crash_queries.core13_seq]
+enabled = true
+threads = 5
+sleep = 0.0
+name = "core13_seq_ignore"
+sql = """
+select id, tenant_id, user_id, date_create, token, pub_token, size, is_stored, original_name, stored_name, title, mimetype, parent_id, contents, contents_enc, contents_highlight, contents_highlight_enc, highlight_type, metadata, metadata_enc, external_url, is_deleted, date_delete, is_public, pub_shared, last_indexed, source, external_id, service_type_id, service_id, is_multitenant, original_tenant_id, tenants_shared_with, service_tenant_id, is_tombstoned, thumbnail_version, date_thumbnail_retrieved, external_ptr, md5, metadata_version, unencrypted_metadata, restriction_type, version, weight_string(id) from files ignore index (`primary`) where tenant_id = 5042983397 and id > 104816183056 order by files.id asc limit 10
+"""
+
+[crash_queries.core12_seq]
+enabled = true
+threads = 5
+sleep = 0.0
+name = "core12_seq_ignore"
+sql = """
+select id, tenant_id, user_id, date_create, token, pub_token, size, is_stored, original_name, stored_name, title, mimetype, parent_id, contents, contents_enc, contents_highlight, contents_highlight_enc, highlight_type, metadata, metadata_enc, external_url, is_deleted, date_delete, is_public, pub_shared, last_indexed, source, external_id, service_type_id, service_id, is_multitenant, original_tenant_id, tenants_shared_with, service_tenant_id, is_tombstoned, thumbnail_version, date_thumbnail_retrieved, external_ptr, md5, metadata_version, unencrypted_metadata, restriction_type, version, weight_string(id) from files ignore index (`primary`) where tenant_id = 7366884189553 and id > 4385210107 order by files.id asc limit 10
+"""

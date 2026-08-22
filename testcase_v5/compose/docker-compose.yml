@@ -1,0 +1,34 @@
+# Containerized MySQL for the v5 integration smoke (SPEC §7 + tasks T036).
+# `make smoke` (added in Makefile) launches this stack; the integration test
+# at internal/smoke/smoke_test.go assumes the master is on localhost:3307 and
+# the replica is on localhost:3308 with the credentials below.
+#
+# Single-node setup: no actual master/replica replication is wired. The
+# config still uses two endpoints so the binary's read/write paths are
+# exercised — the integration smoke verifies init+run mechanics, not
+# replication behavior (which only matters on a real source/replica pair).
+
+services:
+  mysql-master:
+    image: mysql:8.0.36
+    container_name: tc_repro_v5_master
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: repro_db
+    command:
+      - --server-id=1
+      - --log-bin=mysql-bin
+      - --binlog-format=ROW
+      - --max-allowed-packet=268435456
+      - --innodb-log-file-size=256M
+      - --innodb-buffer-pool-size=512M
+      - --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20

@@ -1,0 +1,25 @@
+{
+  "remote": {"remote_dir": "/x", "logs_dir": "y", "screen_sessions": {}},
+  "database": {
+    "write": {"host": "127.0.0.1", "port": 3306, "user": "root", "schema": "s", "table": "t", "socket": "/tmp/s"},
+    "read":  {"host": "10.0.0.1", "port": 3306, "user": "r", "schema": "s", "table": "t"}
+  },
+  "init": {
+    "tenants": 1, "rows_per_tenant": 1, "tenant_id_base": 1, "start_id": 1, "date_base": 1, "date_step": 1, "seed": 1,
+    "blob_profile": {"small_pct": 100, "medium_pct": 0, "large_pct": 0},
+    "insert_batch_rows": 1, "insert_batch_bytes": 1, "init_progress_rows": 1, "tenant_progress_rows": 1,
+    "init_workers": 1, "max_parallel_tenants": 1, "relax_durability": false, "force_init": false,
+    "max_replication_lag_seconds": 60
+  },
+  "run": {
+    "batch_size": 10, "read_source": "replica", "write_target": "master",
+    "encryption": {"mode": "sha256"}, "stop_condition": {"mode": "all_rows"},
+    "replication_check": {"mode": "show_replica_status_only"},
+    "max_parallel_tenants": 1, "progress_interval_batches": 1, "tenant_log_interval_batches": 1,
+    "replication_log_interval_seconds": 1
+  },
+  "safety": {"force_init_requires_flag": true, "max_runtime_seconds": 0},
+  "artifacts": {"dir": "./artifacts"},
+  "debug": {"log_sql_once": false},
+  "ghost_field": "should be rejected by DisallowUnknownFields"
+}

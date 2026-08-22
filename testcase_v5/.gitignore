@@ -1,0 +1,8 @@
+# Build output (rebuildable via `make build` / `make build-linux`).
+/build/
+# Per-run artifacts (provenance + JSON logs + summaries).
+/artifacts/
+# Unattended-runner state (STATUS, logs, CRASH_DETECTED).
+/run-state/
+# A live operator config copied from the template (keep tokens out of git).
+/tc_config.local.json

@@ -1,0 +1,81 @@
+{
+  "remote": {
+    "remote_dir": "/opt/tc-repro",
+    "logs_dir": "logs",
+    "screen_sessions": {
+      "init": "tc_repro_init",
+      "run": "tc_repro_run"
+    }
+  },
+  "database": {
+    "write": {
+      "host": "127.0.0.1",
+      "port": 3306,
+      "user": "root",
+      "password": "",
+      "schema": "repro_db",
+      "table": "files",
+      "socket": "/tmp/mysql.sock"
+    },
+    "read": {
+      "host": "10.0.0.2",
+      "port": 3306,
+      "user": "tc_reader",
+      "password": "REPLACE_ME",
+      "schema": "repro_db",
+      "table": "files",
+      "socket": ""
+    }
+  },
+  "init": {
+    "tenants": 1,
+    "rows_per_tenant": 100,
+    "tenant_id_base": 463855761557,
+    "start_id": 1000000000000,
+    "date_base": 1680000000,
+    "date_step": 60,
+    "seed": 42,
+    "blob_profile": {
+      "small_pct": 30,
+      "medium_pct": 30,
+      "large_pct": 40
+    },
+    "insert_batch_rows": 500,
+    "insert_batch_bytes": 134217728,
+    "init_progress_rows": 100000,
+    "tenant_progress_rows": 10000,
+    "init_workers": 1,
+    "max_parallel_tenants": 1,
+    "relax_durability": true,
+    "force_init": false,
+    "max_replication_lag_seconds": 60
+  },
+  "run": {
+    "batch_size": 9,
+    "read_source": "replica",
+    "write_target": "master",
+    "encryption": {
+      "mode": "sha256"
+    },
+    "stop_condition": {
+      "mode": "all_rows"
+    },
+    "replication_check": {
+      "mode": "show_replica_status_only"
+    },
+    "max_parallel_tenants": 1,
+    "progress_interval_batches": 100,
+    "tenant_log_interval_batches": 100,
+    "replication_log_interval_seconds": 60
+  },
+  "safety": {
+    "force_init_requires_flag": true,
+    "max_runtime_seconds": 0
+  },
+  "artifacts": {
+    "dir": "./artifacts"
+  },
+  "debug": {
+    "log_sql_once": false
+  }
+}

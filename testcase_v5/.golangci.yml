@@ -1,0 +1,36 @@
+# Governed by CONSTITUTION.md §2: funlen + lll enforce function length and
+# line width. The 500-line per-file ceiling (CONSTITUTION P7) is checked by
+# the repo-quality sweep line-count script, not by these linters.
+# `nolint` directives MUST carry inline justification.
+
+run:
+  timeout: 5m
+  go: "1.25"
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - funlen
+    - gosimple
+    - govet
+    - lll
+    - staticcheck
+    - unused
+
+linters-settings:
+  funlen:
+    lines: 80
+    statements: 50
+  lll:
+    line-length: 120
+    tab-width: 4
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - funlen
+        - lll
+  max-issues-per-linter: 0
+  max-same-issues: 0
