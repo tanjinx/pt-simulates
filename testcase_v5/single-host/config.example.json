@@ -1,0 +1,20 @@
+{
+  "database": {
+    "defaults_file": "/etc/slack.d/msql_vt_dba_a.ini",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "socket": "",
+    "schema": "vt_qareshard1",
+    "table": "files"
+  },
+  "workload": {
+    "tenant_id": 0,
+    "id_min": 0,
+    "id_max": 0,
+    "read_workers": 1,
+    "write_workers": 1,
+    "read_batch_size": 10,
+    "read_iterations": 1,
+    "write_iterations": 1
+  }
+}
