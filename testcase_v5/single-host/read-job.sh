@@ -21,6 +21,7 @@ JOB_ITERATIONS="${JOB_ITERATIONS:-1}"
 
 mysql_args=(--batch --skip-column-names "${MYSQL_DATABASE}")
 [[ -n "${MYSQL_DEFAULTS_FILE:-}" ]] && mysql_args=("--defaults-extra-file=${MYSQL_DEFAULTS_FILE}" "${mysql_args[@]}")
+[[ -n "${MYSQL_HOST:-}" ]] && mysql_args+=("--host=${MYSQL_HOST}")
 [[ -n "${MYSQL_SOCKET:-}" ]] && mysql_args+=("--socket=${MYSQL_SOCKET}")
 
 read_worker() {
