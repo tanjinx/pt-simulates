@@ -39,6 +39,9 @@ func Orchestrate(ctx context.Context, cfg *config.Config, logger *slog.Logger) (
 
 	ctx, cleanup := withCancellation(ctx, cfg.Safety.MaxRuntimeSeconds)
 	defer cleanup()
+	if cfg.Run.Mode == "single_host" {
+		return orchestrateSingleHost(ctx, readPool, writePool, cfg)
+	}
 
 	// runCtx is the shared outer context. We cancel it explicitly once all
 	// tenant workers + dispatcher return so repllag.Watch (which only exits on

@@ -11,6 +11,7 @@
       "port": 3306,
       "user": "REPLACE_WITH_MASTER_USER",
       "password": "REPLACE_WITH_MASTER_PASSWORD",
+      "defaults_file": "",
       "schema": "repro_db",
       "table": "files",
       "socket": "/var/run/mysqld/mysqld.sock"
@@ -20,6 +21,7 @@
       "port": 3306,
       "user": "REPLACE_WITH_REPLICA_USER",
       "password": "REPLACE_WITH_REPLICA_PASSWORD",
+      "defaults_file": "",
       "schema": "repro_db",
       "table": "files",
       "socket": ""

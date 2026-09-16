@@ -1,0 +1,86 @@
+{
+  "remote": {
+    "remote_dir": "",
+    "logs_dir": "",
+    "screen_sessions": {}
+  },
+  "database": {
+    "write": {
+      "host": "127.0.0.1",
+      "port": 3306,
+      "user": "",
+      "password": "",
+      "defaults_file": "/etc/slack.d/msql_vt_app_a.ini",
+      "schema": "vt_qareshard1",
+      "table": "files",
+      "socket": ""
+    },
+    "read": {
+      "host": "127.0.0.1",
+      "port": 3306,
+      "user": "",
+      "password": "",
+      "defaults_file": "/etc/slack.d/msql_vt_app_a.ini",
+      "schema": "vt_qareshard1",
+      "table": "files",
+      "socket": ""
+    }
+  },
+  "init": {},
+  "run": {
+    "mode": "single_host",
+    "batch_size": 10,
+    "read_source": "single_host",
+    "write_target": "single_host",
+    "encryption": {"mode": "sha256"},
+    "stop_condition": {"mode": "all_rows"},
+    "replication_check": {"mode": "disabled"},
+    "max_parallel_tenants": 16,
+    "progress_interval_batches": 100,
+    "tenant_log_interval_batches": 100,
+    "replication_log_interval_seconds": 60,
+    "search_mix": {
+      "enabled": true,
+      "range_estimate_workers": 1,
+      "mrr_workers": 1,
+      "forward_refscan_workers": 1,
+      "rows_per_query": 10,
+      "log_interval_seconds": 60
+    },
+    "single_host": {
+      "tenant_id": 0,
+      "id_min": 0,
+      "id_max": 0,
+      "date_create_min": 0,
+      "date_create_max": 0,
+      "external_ids": ["REPLACE_WITH_REAL_EXTERNAL_ID"],
+      "backfill_read_workers": 1,
+      "write_workers": 1,
+      "read_iterations": 1,
+      "write_iterations": 1
+    }
+  },
+  "noise": {
+    "enabled": false,
+    "insert_workers": 0,
+    "insert_rate_per_sec": 0,
+    "insert_start_id": 0,
+    "update_workers": 0,
+    "update_rate_per_sec": 0,
+    "update_hot_rows_per_tenant": 0,
+    "pool_max_conns": 0,
+    "log_interval_seconds": 60,
+    "burst": {
+      "enabled": false,
+      "multiplier": 0,
+      "burst_seconds": 0,
+      "interval_seconds": 0
+    }
+  },
+  "safety": {
+    "force_init_requires_flag": true,
+    "max_runtime_seconds": 0
+  },
+  "artifacts": {"dir": "./artifacts"},
+  "debug": {"log_sql_once": false}
+}

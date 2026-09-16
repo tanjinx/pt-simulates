@@ -65,7 +65,7 @@ func TestRejectGoldenFiles(t *testing.T) {
 		{"reject-stop-condition.json", "stop_condition.mode"},
 		{"reject-replication-check.json", "replication_check.mode"},
 		{"reject-negative-lag.json", "max_replication_lag_seconds"},
-		{"reject-missing-write-user.json", "database.write.user"},
+		{"reject-missing-write-user.json", "database.write requires user or defaults_file"},
 		{"reject-artifacts-dir.json", "artifacts.dir"},
 		{"reject-negative-max-runtime.json", "safety.max_runtime_seconds"},
 	}
@@ -117,7 +117,7 @@ func TestRejectCases(t *testing.T) {
 		{"StopCondition", func(c *Config) { c.Run.StopCondition.Mode = "n_rows" }, "stop_condition.mode"},
 		{"ReplicationCheck", func(c *Config) { c.Run.ReplicationCheck.Mode = "ping" }, "replication_check.mode"},
 		{"NegativeLag", func(c *Config) { c.Init.MaxReplicationLagSeconds = -1 }, "max_replication_lag_seconds"},
-		{"MissingWriteUser", func(c *Config) { c.Database.Write.User = "" }, "database.write.user"},
+		{"MissingWriteUser", func(c *Config) { c.Database.Write.User = "" }, "database.write requires user or defaults_file"},
 		{"ArtifactsDirMissing", func(c *Config) { c.Artifacts.Dir = "" }, "artifacts.dir"},
 		{"NegativeMaxRuntime", func(c *Config) { c.Safety.MaxRuntimeSeconds = -10 }, "safety.max_runtime_seconds"},
 	}

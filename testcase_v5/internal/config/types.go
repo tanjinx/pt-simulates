@@ -70,13 +70,14 @@ type Database struct {
 // Endpoint captures one side of the master/replica pair. Either Host or
 // Socket must be set; Socket wins when both are present.
 type Endpoint struct {
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	User     string `json:"user"`
-	Password string `json:"password"`
-	Schema   string `json:"schema"`
-	Table    string `json:"table"`
-	Socket   string `json:"socket"`
+	Host         string `json:"host"`
+	Port         int    `json:"port"`
+	User         string `json:"user"`
+	Password     string `json:"password"`
+	DefaultsFile string `json:"defaults_file"`
+	Schema       string `json:"schema"`
+	Table        string `json:"table"`
+	Socket       string `json:"socket"`
 }
 
 // Init carries the seeding knobs.
@@ -123,6 +124,7 @@ type BlobProfile struct {
 
 // Run carries the workload knobs.
 type Run struct {
+	Mode                          string           `json:"mode"`
 	BatchSize                     int              `json:"batch_size"`
 	ReadSource                    string           `json:"read_source"`
 	WriteTarget                   string           `json:"write_target"`
@@ -134,6 +136,20 @@ type Run struct {
 	TenantLogIntervalBatches      int              `json:"tenant_log_interval_batches"`
 	ReplicationLogIntervalSeconds int              `json:"replication_log_interval_seconds"`
 	SearchMix                     SearchMix        `json:"search_mix"`
+	SingleHost                    SingleHost       `json:"single_host"`
+}
+
+type SingleHost struct {
+	TenantID            int64    `json:"tenant_id"`
+	IDMin               int64    `json:"id_min"`
+	IDMax               int64    `json:"id_max"`
+	DateCreateMin       int64    `json:"date_create_min"`
+	DateCreateMax       int64    `json:"date_create_max"`
+	ExternalIDs         []string `json:"external_ids"`
+	BackfillReadWorkers int      `json:"backfill_read_workers"`
+	WriteWorkers        int      `json:"write_workers"`
+	ReadIterations      int      `json:"read_iterations"`
+	WriteIterations     int      `json:"write_iterations"`
 }
 
 // SearchMix carries the optional read-path diversification searchers that run
