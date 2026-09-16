@@ -21,6 +21,9 @@ import (
 // scan later), multiStatements=false, interpolateParams=false (binary
 // protocol on the wire — the whole reason for the language choice).
 func Open(endpoint config.Endpoint, maxConns int) (*sql.DB, error) {
+	if err := resolveDefaults(&endpoint); err != nil {
+		return nil, err
+	}
 	dsn := DSN(endpoint)
 	driver, err := sql.Open("mysql", dsn)
 	if err != nil {

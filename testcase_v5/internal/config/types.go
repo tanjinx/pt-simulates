@@ -70,13 +70,14 @@ type Database struct {
 // Endpoint captures one side of the master/replica pair. Either Host or
 // Socket must be set; Socket wins when both are present.
 type Endpoint struct {
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	User     string `json:"user"`
-	Password string `json:"password"`
-	Schema   string `json:"schema"`
-	Table    string `json:"table"`
-	Socket   string `json:"socket"`
+	Host         string `json:"host"`
+	Port         int    `json:"port"`
+	User         string `json:"user"`
+	Password     string `json:"password"`
+	DefaultsFile string `json:"defaults_file"`
+	Schema       string `json:"schema"`
+	Table        string `json:"table"`
+	Socket       string `json:"socket"`
 }
 
 // Init carries the seeding knobs.

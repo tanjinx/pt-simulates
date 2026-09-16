@@ -149,11 +149,11 @@ func validateDatabase(cfg *Config) []error {
 	if r.Host == "" && r.Socket == "" {
 		errs = append(errs, errors.New("database.read requires host or socket"))
 	}
-	if w.User == "" {
-		errs = append(errs, errors.New("database.write.user is required"))
+	if w.User == "" && w.DefaultsFile == "" {
+		errs = append(errs, errors.New("database.write requires user or defaults_file"))
 	}
-	if r.User == "" {
-		errs = append(errs, errors.New("database.read.user is required"))
+	if r.User == "" && r.DefaultsFile == "" {
+		errs = append(errs, errors.New("database.read requires user or defaults_file"))
 	}
 	return errs
 }

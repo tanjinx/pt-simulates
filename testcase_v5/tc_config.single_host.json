@@ -8,8 +8,9 @@
     "write": {
       "host": "127.0.0.1",
       "port": 3306,
-      "user": "REPLACE_WITH_WRITE_USER",
-      "password": "REPLACE_WITH_WRITE_PASSWORD",
+      "user": "",
+      "password": "",
+      "defaults_file": "/etc/slack.d/msql_vt_app_a.ini",
       "schema": "vt_qareshard1",
       "table": "files",
       "socket": ""
@@ -17,8 +18,9 @@
     "read": {
       "host": "127.0.0.1",
       "port": 3306,
-      "user": "REPLACE_WITH_READ_USER",
-      "password": "REPLACE_WITH_READ_PASSWORD",
+      "user": "",
+      "password": "",
+      "defaults_file": "/etc/slack.d/msql_vt_app_a.ini",
       "schema": "vt_qareshard1",
       "table": "files",
       "socket": ""

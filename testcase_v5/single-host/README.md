@@ -65,16 +65,19 @@ may differ, but the write account must be able to update the table and execute
 `SET SESSION sql_log_bin = 0`. Validation enforces that the read and write
 endpoints share the same host, port (or socket), schema, and table.
 
-For a local TCP connection, use `127.0.0.1`. Using the machine hostname can
-select a different MySQL `user@host` account.
+### Credentials via defaults file (recommended)
+
+Point `defaults_file` at a MySQL option file containing a `[client]` section
+with `user` and `password`. This avoids storing passwords in the JSON config:
 
 ```json
 "database": {
   "write": {
     "host": "127.0.0.1",
     "port": 3306,
-    "user": "WRITE_USER",
-    "password": "WRITE_PASSWORD",
+    "user": "",
+    "password": "",
+    "defaults_file": "/etc/slack.d/msql_vt_app_a.ini",
     "schema": "vt_qareshard1",
     "table": "files",
     "socket": ""
@@ -82,8 +85,9 @@ select a different MySQL `user@host` account.
   "read": {
     "host": "127.0.0.1",
     "port": 3306,
-    "user": "READ_USER",
-    "password": "READ_PASSWORD",
+    "user": "",
+    "password": "",
+    "defaults_file": "/etc/slack.d/msql_vt_app_a.ini",
     "schema": "vt_qareshard1",
     "table": "files",
     "socket": ""
@@ -91,8 +95,27 @@ select a different MySQL `user@host` account.
 }
 ```
 
-Alternatively, set the same Unix socket on both endpoints. A configured socket
-takes precedence over host and port.
+The defaults file is the same format used by `mysql --defaults-file=...`:
+
+```ini
+[client]
+user=vt_app
+password=secret
+```
+
+When both `defaults_file` and explicit `user`/`password` are set, the explicit
+values take precedence.
+
+### Inline credentials
+
+Alternatively, set `user` and `password` directly and leave `defaults_file`
+empty.
+
+For a local TCP connection, use `127.0.0.1`. Using the machine hostname can
+select a different MySQL `user@host` account.
+
+Set the same Unix socket on both endpoints to use a socket connection. A
+configured socket takes precedence over host and port.
 
 ## Select real values
 
