@@ -13,7 +13,9 @@ import (
 func Validate(cfg *Config) error {
 	var errs []error
 	errs = append(errs, validateDatabase(cfg)...)
-	errs = append(errs, validateInit(cfg)...)
+	if cfg.Run.Mode != "single_host" {
+		errs = append(errs, validateInit(cfg)...)
+	}
 	errs = append(errs, validateRun(cfg)...)
 	errs = append(errs, validateSearchMix(cfg)...)
 	errs = append(errs, validateNoise(cfg)...)
@@ -208,6 +210,9 @@ func validateBlobProfile(p BlobProfile) []error {
 func validateRun(cfg *Config) []error {
 	var errs []error
 	r := cfg.Run
+	if r.Mode != "" && r.Mode != "source_replica" && r.Mode != "single_host" {
+		errs = append(errs, fmt.Errorf("run.mode must be \"source_replica\" or \"single_host\" (got %q)", r.Mode))
+	}
 	if r.BatchSize != 10 {
 		errs = append(errs, fmt.Errorf(
 			"run.batch_size must be 10 (got %d) — matches production backfill cursor",
@@ -222,7 +227,14 @@ func validateRun(cfg *Config) []error {
 			"run.stop_condition.mode must be \"all_rows\" (got %q)",
 			r.StopCondition.Mode))
 	}
-	if r.ReplicationCheck.Mode != "show_replica_status_only" {
+	if r.Mode == "single_host" {
+		if r.ReplicationCheck.Mode != "disabled" {
+			errs = append(errs, fmt.Errorf(
+				"run.replication_check.mode must be \"disabled\" in single_host mode (got %q)",
+				r.ReplicationCheck.Mode))
+		}
+		errs = append(errs, validateSingleHost(cfg)...)
+	} else if r.ReplicationCheck.Mode != "show_replica_status_only" {
 		errs = append(errs, fmt.Errorf(
 			"run.replication_check.mode must be \"show_replica_status_only\" (got %q)",
 			r.ReplicationCheck.Mode))
@@ -245,6 +257,44 @@ func validateRun(cfg *Config) []error {
 		errs = append(errs, fmt.Errorf(
 			"run.tenant_log_interval_batches must be >= 1 (got %d)",
 			r.TenantLogIntervalBatches))
+	}
+	return errs
+}
+
+func validateSingleHost(cfg *Config) []error {
+	var errs []error
+	s := cfg.Run.SingleHost
+	w, r := cfg.Database.Write, cfg.Database.Read
+	if w.Host != r.Host || w.Port != r.Port || w.Socket != r.Socket ||
+		w.Schema != r.Schema || w.Table != r.Table {
+		errs = append(errs, errors.New("single_host mode requires read and write endpoints on the same server and table"))
+	}
+	if cfg.Noise.Enabled {
+		errs = append(errs, errors.New("noise.enabled must be false in single_host mode"))
+	}
+	if s.IDMin > s.IDMax {
+		errs = append(errs, errors.New("run.single_host.id_min must be <= id_max"))
+	}
+	if s.BackfillReadWorkers < 0 || s.WriteWorkers < 1 {
+		errs = append(errs, errors.New("run.single_host worker counts are invalid"))
+	}
+	searchWorkers := 0
+	if cfg.Run.SearchMix.Enabled {
+		searchWorkers = cfg.Run.SearchMix.RangeEstimateWorkers +
+			cfg.Run.SearchMix.MRRWorkers + cfg.Run.SearchMix.ForwardRefScanWorkers
+	}
+	if s.BackfillReadWorkers+searchWorkers < 1 {
+		errs = append(errs, errors.New("run.single_host requires at least one read worker"))
+	}
+	if s.ReadIterations < 1 || s.WriteIterations < 1 {
+		errs = append(errs, errors.New("run.single_host iteration counts must be >= 1"))
+	}
+	if cfg.Run.SearchMix.Enabled && cfg.Run.SearchMix.RangeEstimateWorkers > 0 &&
+		s.DateCreateMin > s.DateCreateMax {
+		errs = append(errs, errors.New("run.single_host.date_create_min must be <= date_create_max"))
+	}
+	if cfg.Run.SearchMix.Enabled && cfg.Run.SearchMix.MRRWorkers > 0 && len(s.ExternalIDs) == 0 {
+		errs = append(errs, errors.New("run.single_host.external_ids is required for MRR workers"))
 	}
 	return errs
 }
